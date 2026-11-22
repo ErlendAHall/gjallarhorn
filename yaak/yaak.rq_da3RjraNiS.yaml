@@ -1,0 +1,36 @@
+type: http_request
+model: http_request
+id: rq_da3RjraNiS
+createdAt: 2026-11-22T09:10:02.288555600
+updatedAt: 2026-11-22T09:10:16.131266122
+workspaceId: wk_LxQ3QBPB4H
+folderId: null
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: ''
+sortPriority: -1795337926763.0
+url: http://localhost:1234/subscribers
+urlParameters: []
+settingSendCookies:
+  enabled: false
+  value: true
+settingStoreCookies:
+  enabled: false
+  value: true
+settingValidateCertificates:
+  enabled: false
+  value: true
+settingFollowRedirects:
+  enabled: false
+  value: true
+settingRequestTimeout:
+  enabled: false
+  value: 0
+settingHttpVersion:
+  enabled: false
+  value: auto

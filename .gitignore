@@ -1,0 +1,25 @@
+# Secrets: VAPID key pairs contain the private key
+vapid.json
+**/vapid.json
+
+# Environment files (client/gjallarhorn-client/.env only holds the public VAPID key, so it is kept)
+.env
+.env.*
+!client/gjallarhorn-client/.env
+
+# Dependencies and build output
+node_modules/
+dist/
+dist-ssr/
+coverage/
+
+# Logs
+*.log
+
+# Editors and OS
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+*.swp
