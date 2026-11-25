@@ -20,10 +20,16 @@ and make sure the alarm reaches everyone who needs to hear it.
 
 ## Requirements
 
-- Deno 2.x
-- A VAPID key pair in `vapid.json` in the project root
+- Deno 2.x (also drives the frontend's npm tooling; Node is not required)
+- A VAPID key pair in `gjallarhorn-server/vapid.json`
 
 ## Setup
+
+Install the workspace dependencies from the repository root:
+
+```sh
+deno install
+```
 
 Generate a VAPID key pair with
 [`@negrel/webpush`](https://jsr.io/@negrel/webpush):
@@ -37,21 +43,50 @@ console.log(JSON.stringify(await webpush.exportVapidKeys(keys), null, 2));
 ```
 
 ```sh
-deno run generate-vapid.ts > vapid.json
+deno run generate-vapid.ts > gjallarhorn-server/vapid.json
 ```
 
 `vapid.json` contains your private key. Do not commit it.
 
 ## Running
 
+The repository is a
+[Deno workspace](https://docs.deno.com/runtime/fundamentals/workspaces/) with
+two members, `gjallarhorn-server` and `gjallarhorn-web`. All tasks are run from
+the repository root:
+
+| Task                   | What it does                                                               |
+| ---------------------- | -------------------------------------------------------------------------- |
+| `deno task dev`        | Starts the server (`:1234`) and the Vite dev server (`:5173`) in parallel. |
+| `deno task dev:server` | Starts only the server, with file watching.                                |
+| `deno task dev:web`    | Starts only the Vite dev server.                                           |
+| `deno task start`      | Starts the server without file watching.                                   |
+| `deno task build`      | Type-checks and builds the web app into `gjallarhorn-web/dist`.            |
+| `deno task preview`    | Serves the built web app with Vite.                                        |
+| `deno task test`       | Runs the server tests.                                                     |
+| `deno task lint`       | Runs `deno lint` on the server and Biome on the web app.                   |
+
+To run a member's own task directly, filter on its name:
+
 ```sh
-deno run --watch --allow-net --allow-read main.ts
+deno task --filter @gjallarhorn/server dev
+deno task --filter gjallarhorn-web build
 ```
 
 The server listens on `http://localhost:1234`.
 
-> The `dev` task in `deno.json` currently only grants `--allow-net`, so it fails
-> when reading `vapid.json`. Use the command above until the task is updated.
+### Docker
+
+Build the image and run it with the VAPID key file mounted at runtime:
+
+```sh
+docker build -t gjallarhorn .
+docker run --rm -p 1234:1234 \
+  --mount type=bind,src="$(pwd)/gjallarhorn-server/vapid.json",dst=/app/vapid.json,readonly \
+  gjallarhorn
+```
+
+The key file is not copied into the image.
 
 ## API
 
@@ -74,9 +109,9 @@ envelope:
 
 ### `GET /`
 
-Serves [`public/index.html`](./public/index.html) as
-`text/html; charset=utf-8`. `HEAD /` is also supported. Other methods on `/` fall
-through to the default response below.
+Serves [`public/index.html`](./public/index.html) as `text/html; charset=utf-8`.
+`HEAD /` is also supported. Other methods on `/` fall through to the default
+response below.
 
 ### `GET /up`
 
@@ -173,18 +208,21 @@ Any other path returns `200` with the same JSON as [`/up`](#get-up).
 ## Project structure
 
 ```text
-main.ts                          HTTP server and routes
-public/index.html                Web app served at /
-webpush-server/WebGjallarhorn.ts Web Push application server and subscriber handling
-alert/sms.js                     Twilio SMS sender (work in progress)
-alert/webPush.ts                 Earlier Web Push draft (superseded by WebGjallarhorn.ts)
-main_test.ts                     Tests (currently starter template, out of date)
+deno.json                                          Workspace root: members and aggregate tasks
+deno.lock                                          Single lockfile for the whole workspace
+gjallarhorn-server/                                Deno server (@gjallarhorn/server)
+  deno.json                                        Server tasks and dependencies
+  main.ts                                          HTTP server and routes
+  webpush-server/WebGjallarhorn.ts                 Web Push application server and subscriber handling
+  main_test.ts                                     Tests (currently starter template, out of date)
+gjallarhorn-web/                                   React/Vite frontend (gjallarhorn-web, package.json member)
+alert/sms.js                                       Twilio SMS sender (work in progress)
 ```
 
 ## Testing
 
 ```sh
-deno test --allow-read
+deno task test
 ```
 
 ## TODO
@@ -194,8 +232,9 @@ deno test --allow-read
 - Finish SMS alerting and move credentials to environment variables
 - Update the tests to match the current routes
 
-
 ## Architecture
+
+```text
 Phone (installed web app + service worker)
    │ HTTPS, same origin
    ▼
@@ -209,3 +248,4 @@ Gjallarhorn (Deno)
           │
           ▼
    Subscriber store (Deno KV)
+```

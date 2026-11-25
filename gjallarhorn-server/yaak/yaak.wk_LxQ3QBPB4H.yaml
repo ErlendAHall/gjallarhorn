@@ -5,7 +5,7 @@ createdAt: 2026-09-06T07:10:36.723387079
 updatedAt: 2026-09-06T07:10:36.723387869
 authentication: {}
 authenticationType: null
-description: ''
+description: ""
 headers: []
 name: Yaak
 encryptionKeyChallenge: null

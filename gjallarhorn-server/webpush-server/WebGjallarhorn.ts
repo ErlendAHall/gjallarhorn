@@ -1,4 +1,4 @@
-import * as webpush from "jsr:@negrel/webpush";
+import * as webpush from "@negrel/webpush";
 
 const ADMINEMAIL = "erlendhall@protonmail.com" as const;
 let subscribersDb: webpush.PushSubscription[] = [];

@@ -1,8 +1,23 @@
 {
+  "workspace": ["./gjallarhorn-server", "./gjallarhorn-web"],
+  "nodeModulesDir": "auto",
   "tasks": {
-    "dev": "deno run --watch --allow-net --allow-read main.ts"
+    "dev": {
+      "description": "Run the server and the web dev server in parallel",
+      "dependencies": ["dev:server", "dev:web"]
+    },
+    "dev:server": "deno task --filter @gjallarhorn/server dev",
+    "dev:web": "deno task --filter gjallarhorn-web dev",
+    "build": "deno task --filter gjallarhorn-web build",
+    "preview": "deno task --filter gjallarhorn-web preview",
+    "start": "deno task --filter @gjallarhorn/server start",
+    "test": "deno task --filter @gjallarhorn/server test",
+    "lint": "deno lint && deno task --filter gjallarhorn-web lint"
   },
-  "imports": {
-    "@std/assert": "jsr:@std/assert@1"
+  "fmt": {
+    "exclude": ["gjallarhorn-web"]
+  },
+  "lint": {
+    "exclude": ["gjallarhorn-web"]
   }
 }

@@ -1,20 +1,20 @@
 type: http_request
 model: http_request
-id: rq_i9aj5GAksn
-createdAt: 2026-11-22T08:58:46.764502867
-updatedAt: 2026-11-22T09:09:56.467325478
+id: rq_da3RjraNiS
+createdAt: 2026-11-22T09:10:02.288555600
+updatedAt: 2026-11-22T09:10:16.131266122
 workspaceId: wk_LxQ3QBPB4H
 folderId: null
 authentication: {}
 authenticationType: null
 body: {}
 bodyType: null
-description: ''
+description: ""
 headers: []
 method: GET
-name: ''
+name: ""
 sortPriority: -1795337926763.0
-url: http://localhost:1234/up
+url: http://localhost:1234/subscribers
 urlParameters: []
 settingSendCookies:
   enabled: false

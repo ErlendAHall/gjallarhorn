@@ -1,5 +1,5 @@
 import { webGjallarhorn } from "./webpush-server/WebGjallarhorn.ts";
-import * as webpush from "jsr:@negrel/webpush";
+import type * as webpush from "@negrel/webpush";
 
 const INDEX_HTML = new URL("./client/public/index.html", import.meta.url);
 
@@ -52,9 +52,9 @@ export async function handler(req: Request): Promise<Response> {
   }
 
   return Response.json({
-      message: "I am up!",
-      time: new Date().toISOString(),
-    });
+    message: "I am up!",
+    time: new Date().toISOString(),
+  });
 }
 
 /**
